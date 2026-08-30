@@ -1,0 +1,80 @@
+mission_node:
+  ros__parameters:
+    # ── Hedef rengi (yarışma günü "ros2 param set" ile değiştirilebilir) ──
+    # "red" | "green" | "black"
+    target_color: "red"
+
+    odom_frame: "odom"
+
+    # ── P1 Görev Noktaları (zikzak koridor) ──
+    # ÖZEL/YARIŞMA VERİSİ ÇIKARILDI: gerçek görev noktası koordinatları
+    # kaldırıldı. Düz liste [x1, y1, x2, y2, ...] biçiminde kendi noktalarınızı
+    # girin (odom çerçevesi, metre). Aşağıdakiler yalnızca yer tutucudur.
+    p1_waypoints:
+      - 0.0    # GN1.x  <-- DOLDURUN
+      - 0.0    # GN1.y
+      - 0.0    # GN2.x
+      - 0.0    # GN2.y
+      - 0.0    # GN3.x
+      - 0.0    # GN3.y
+      - 0.0    # GN4.x
+      - 0.0    # GN4.y
+
+    # ── P2 Bitiş Noktası (GN5) ──
+    # ÖZEL/YARIŞMA VERİSİ ÇIKARILDI — kendi bitiş noktanızı girin.
+    p2_goal: [0.0, 0.0]   # <-- DOLDURUN
+
+    # ── Kapı Hesaplama Eşikleri (gate_calculator) ──
+    min_gate_width: 2.0
+    max_gate_width: 12.0
+
+    # ── P3 Görsel Servo (TYR algoritması) ──
+    # YOLO güven eşiği — bu üstünde hedef "kilitlendi" kabul edilir
+    p3_conf_threshold: 0.50
+
+    # Kamera optik merkezi (640×480 için 320.0)
+    p3_img_center_x: 320.0
+
+    # PID — piksel hatası → angular.z
+    # pixel_error_x > 0 (hedef sağda) → angular.z < 0 (sağa dön)
+    p3_kp_yaw: -0.004
+    p3_ki_yaw:  0.0
+    p3_kd_yaw: -0.0008
+
+    # Hız profili
+    p3_base_linear_vel:    0.5   # m/s — uzak mesafede sabit
+    p3_max_linear_vel:     1.5   # m/s — kontak yaklaşımında
+    p3_approach_distance:  6.0   # m — bu mesafeden itibaren itki artar
+    p3_contact_distance:   0.8   # m — bu mesafede COMPLETE → RTL
+
+    # Görüş kaybı toleransı
+    p3_target_loss_timeout: 0.7  # s — bu süreden uzun bbox kaybı = kör nokta kilidi
+
+    # Görev koruma sınırları
+    p3_kamikaze_timeout:   30.0  # s
+    p3_scan_angular_vel:    0.4  # rad/s — hedef tararken yerinde dönüş hızı
+
+    # ── Güvenlik / FDIR (KTR §2, §3.2) ──
+    require_health: false        # GEÇİCİ TEST: LiDAR bağlı değilken INIT geçişini
+                                  # zorlamak için. Gerçek donanım/yarışma öncesi
+                                  # MUTLAKA true'ya geri al.
+    imu_contact_g: 3.0           # kamikaze temas: |a| > bu×G
+    imu_contact_duration: 0.10   # s
+    complete_settle_sec: 2.0     # temas → DISARM gecikmesi
+    hold_mode: "HOLD"
+    rtl_mode:  "RTL"
+
+    # ── Bağlantı kopması (YKİ heartbeat) ──
+    yki_heartbeat_timeout: 5.0   # s → CONNECTION_FAIL
+    conn_rtl_timeout: 30.0       # s → RTL
+    conn_safe_timeout: 90.0      # s → SAFE_MODE
+
+    # ── P1 retry ──
+    p1_goal_timeout: 60.0        # s: NavigateToPose sonuçlanmazsa
+    p1_max_retry: 1
+    costmap_clear_radius: 3.0    # m
+
+    # ── P2 kapı tespiti / YKİ yükleme / Pixhawk yedeği ──
+    enable_gate_detection: true
+    enable_mission_upload: true  # /mavros/mission/waypoints → yerel P1
+    enable_pixhawk_backup: true  # /mavros/mission/push AUTO yedeği

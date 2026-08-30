@@ -1,0 +1,48 @@
+# ── ROS 2 / colcon ──────────────────────────────────────────────
+build/
+install/
+log/
+
+# ── Python ──────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+*.egg
+.pytest_cache/
+.venv/
+venv/
+
+# ── C/C++ build ─────────────────────────────────────────────────
+*.o
+*.so
+*.a
+
+# ── ML model weights / large binaries (provide your own) ────────
+*.engine
+*.onnx
+*.pt
+*.pth
+*.weights
+
+# ── 3D meshes (vehicle geometry — keep out of public repos) ─────
+*.stl
+*.STL
+*.dae
+
+# ── Recordings / logs ───────────────────────────────────────────
+*.bag
+*.mcap
+*.db3
+*.mp4
+*.csv
+
+# ── Editor / OS ─────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# ── Windows / WSL ───────────────────────────────────────────────
+*:Zone.Identifier
